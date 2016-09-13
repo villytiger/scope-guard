@@ -48,8 +48,14 @@
 #define VT_SCOPE_GUARD_DO_STRING_JOIN(arg1, arg2) arg1 ## arg2
 #define VT_SCOPE_GUARD_STRING_JOIN(arg1, arg2) VT_SCOPE_GUARD_DO_STRING_JOIN(arg1, arg2)
 
+#ifdef __COUNTER__
+#define VT_SCOPE_GUARD_VARIABLE(arg) VT_SCOPE_GUARD_STRING_JOIN(arg, __COUNTER__)
+#else
+#define VT_SCOPE_GUARD_VARIABLE(arg) VT_SCOPE_GUARD_STRING_JOIN(arg, __LINE__)
+#endif
+
 #define SCOPE_EXIT(...) \
-	vt::scopeGuard::ScopeExit VT_SCOPE_GUARD_STRING_JOIN(scopeExit, __COUNTER__) = [__VA_ARGS__]()
+	vt::scopeGuard::ScopeExit VT_SCOPE_GUARD_VARIABLE(scopeExit) = [__VA_ARGS__]()
 
 namespace vt {
 namespace scopeGuard {
