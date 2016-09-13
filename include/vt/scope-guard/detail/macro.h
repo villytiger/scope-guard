@@ -6,9 +6,6 @@
 
 #pragma once
 
-#include <functional>
-#include <utility>
-
 #ifndef VT_SCOPE_GUARD_ON_STD_EXCEPTION
 #include <iostream>
 #define VT_SCOPE_GUARD_ON_STD_EXCEPTION(exception) \
@@ -53,34 +50,3 @@
 #else
 #define VT_SCOPE_GUARD_VARIABLE(arg) VT_SCOPE_GUARD_STRING_JOIN(arg, __LINE__)
 #endif
-
-#define SCOPE_EXIT(...) \
-	vt::scopeGuard::detail::ScopeExit VT_SCOPE_GUARD_VARIABLE(scopeExit) = [__VA_ARGS__]()
-
-namespace vt {
-namespace scopeGuard {
-namespace detail {
-
-class ScopeExit {
-public:
-	ScopeExit(ScopeExit&) = delete;
-	ScopeExit& operator=(ScopeExit&) = delete;
-	ScopeExit(ScopeExit&& other) = default;
-	ScopeExit& operator=(ScopeExit&&) = default;
-
-	template<typename T>
-	ScopeExit(T&& action)
-		: mAction(std::forward<T>(action))
-	{}
-
-	~ScopeExit() {
-		VT_SCOPE_GUARD_WRAP_ACTION(mAction);
-	}
-
-private:
-	std::function<void()> mAction;
-};
-
-}
-}
-}
