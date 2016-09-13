@@ -6,32 +6,26 @@
 
 #pragma once
 
-#include <exception>
-
 #include "detail/platform.h"
+
 
 #ifdef VT_SCOPE_GUARD_SUPPORT_UNCAUGHT_EXCEPTIONS
 
-#include <functional>
 #include <utility>
 
 #include "detail/macro.h"
 
+
 #define SCOPE_SUCCESS(...) \
-	vt::scopeGuard::detail::ScopeSuccess VT_SCOPE_GUARD_VARIABLE(scopeSuccess) = [__VA_ARGS__]()
+	auto VT_SCOPE_GUARD_VARIABLE(scopeSuccess) = vt::scopeGuard::detail::ScopeSuccessProducer() << [__VA_ARGS__]()
 
 namespace vt {
 namespace scopeGuard {
 namespace detail {
 
+template<typename T>
 class ScopeSuccess {
 public:
-	ScopeSuccess(ScopeSuccess&) = delete;
-	ScopeSuccess& operator=(ScopeSuccess&) = delete;
-	ScopeSuccess(ScopeSuccess&& other) = default;
-	ScopeSuccess& operator=(ScopeSuccess&&) = default;
-
-	template<typename T>
 	ScopeSuccess(T&& action)
 		: mExceptionCount(std::uncaught_exceptions())
 		, mAction(std::forward<T>(action))
@@ -44,19 +38,28 @@ public:
 
 private:
 	int mExceptionCount;
-	std::function<void()> mAction;
+	T mAction;
+};
+
+class ScopeSuccessProducer {
+public:
+	template<typename T>
+	ScopeSuccess<T> operator<<(T&& action) {
+		return ScopeSuccess<T>(std::forward<T>(action));
+	}
 };
 
 }
 }
 }
 
+
 #else
 
-#include "detail/platform.h"
 
 #ifdef VT_SCOPE_GUARD_PRAGMA_ERROR
 #define SCOPE_SUCCESS(...) VT_SCOPE_GUARD_PRAGMA_ERROR("std::uncaught_exceptions is not supported by compiler")
 #endif
+
 
 #endif
