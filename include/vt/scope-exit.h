@@ -55,10 +55,11 @@
 #endif
 
 #define SCOPE_EXIT(...) \
-	vt::scopeGuard::ScopeExit VT_SCOPE_GUARD_VARIABLE(scopeExit) = [__VA_ARGS__]()
+	vt::scopeGuard::detail::ScopeExit VT_SCOPE_GUARD_VARIABLE(scopeExit) = [__VA_ARGS__]()
 
 namespace vt {
 namespace scopeGuard {
+namespace detail {
 
 class ScopeExit {
 public:
@@ -80,5 +81,6 @@ private:
 	std::function<void()> mAction;
 };
 
+}
 }
 }
