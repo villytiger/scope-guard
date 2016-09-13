@@ -4,9 +4,18 @@
 #define VT_SCOPE_GUARD_SUPPORT_UNCAUGHT_EXCEPTIONS 1
 #endif
 
-#if defined(_MSC_VER) && _MSC_VER >= 1900
+#ifdef _MSC_VER
+
+#if _MSC_VER >= 1900
 #define VT_SCOPE_GUARD_SUPPORT_UNCAUGHT_EXCEPTIONS 1
 #endif
+
+#if _MSC_VER < 1800
+#define VT_SCOPE_GUARD_NO_SUPPORT_DEFAULT_DELETE 1
+#endif
+
+#endif // _MSC_VER
+
 
 #if defined(__GNUC__)
 #define VT_SCOPE_GUARD_PRAGMA(str) _Pragma (#str)

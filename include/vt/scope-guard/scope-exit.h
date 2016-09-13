@@ -10,6 +10,7 @@
 #include <utility>
 
 #include "detail/macro.h"
+#include "detail/platform.h"
 
 #define SCOPE_EXIT(...) \
 	vt::scopeGuard::detail::ScopeExit VT_SCOPE_GUARD_VARIABLE(scopeExit) = [__VA_ARGS__]()
@@ -20,10 +21,12 @@ namespace detail {
 
 class ScopeExit {
 public:
+#ifndef VT_SCOPE_GUARD_NO_SUPPORT_DEFAULT_DELETE
 	ScopeExit(ScopeExit&) = delete;
 	ScopeExit& operator=(ScopeExit&) = delete;
 	ScopeExit(ScopeExit&& other) = default;
 	ScopeExit& operator=(ScopeExit&&) = default;
+#endif
 
 	template<typename T>
 	ScopeExit(T&& action)
