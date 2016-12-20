@@ -6,18 +6,8 @@
 
 #pragma once
 
-#include <exception>
-
-
-#if defined(__cpp_lib_uncaught_exceptions) && __cpp_lib_uncaught_exceptions >= 201411
+#if defined(_MSC_VER) && _MSC_VER >= 1900
 
 #define VT_SCOPE_GUARD_SUPPORT_UNCAUGHT_EXCEPTIONS 1
 
-inline int uncaughtExceptions() {
-	return std::uncaught_exceptions();
-}
-
-#endif
-
-#include "gcc.h"
-#include "msvc.h"
+#endif // _MSC_VER

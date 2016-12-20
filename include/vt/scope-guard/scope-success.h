@@ -27,12 +27,12 @@ template<typename T>
 class ScopeSuccess {
 public:
 	ScopeSuccess(T&& action)
-		: mExceptionCount(std::uncaught_exceptions())
+		: mExceptionCount(uncaughtExceptions())
 		, mAction(std::forward<T>(action))
 	{}
 
 	~ScopeSuccess() {
-		if (std::uncaught_exceptions() == mExceptionCount)
+		if (uncaughtExceptions() == mExceptionCount)
 			VT_SCOPE_GUARD_WRAP_ACTION(mAction);
 	}
 
