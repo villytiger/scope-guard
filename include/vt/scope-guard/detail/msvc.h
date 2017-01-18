@@ -8,6 +8,14 @@
 
 #if defined(_MSC_VER) && _MSC_VER >= 1900
 
+#if !defined(VT_SCOPE_GUARD_SUPPORT_UNCAUGHT_EXCEPTIONS)
+
 #define VT_SCOPE_GUARD_SUPPORT_UNCAUGHT_EXCEPTIONS 1
 
-#endif // _MSC_VER
+inline int uncaughtExceptions() {
+	return std::uncaught_exceptions();
+}
+
+#endif
+
+#endif
