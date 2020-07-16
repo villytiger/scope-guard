@@ -12,9 +12,17 @@
 
 #define VT_SCOPE_GUARD_SUPPORT_UNCAUGHT_EXCEPTIONS 1
 
+namespace vt {
+namespace scopeGuard {
+namespace detail {
+
 inline int uncaughtExceptions() {
 	return std::uncaught_exceptions();
 }
+
+} // namespace detail
+} // namespace scopeGuard
+} // namespace vt
 
 #endif
 
